@@ -7,12 +7,63 @@
     
   <title>Lights Out</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"  integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"  crossorigin="anonymous"> 
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <link rel="stylesheet" href="styles/main.css">
 
   <script>
-    function callSetup(){
+    function callSetup(event){
 
+        event.preventDefault();//stops form from being submitted
+
+        const formData = new FormData(event.target);
+        const rows = formData.get('rows');
+        const columns = formData.get('columns');//gets data from form
+
+        const url ="setup.php?rows="+rows+"&columns="+columns;//setup.php url with query poarameters
+
+        //alert(url);
+
+        //https://www.w3schools.com/jquery/jquery_ref_ajax.asp
+        //https://www.geeksforgeeks.org/jquery-ajax-method/
+        $.ajax({
+            url:url,
+            type: "GET",
+            dataType: 'json',
+            success: function(response) {
+                console.log('Server response:', response);
+                //alert('Data received from the server!');
+                console.log(response.lightsOnPositions);
+                buildTable(rows, columns, response.lightsOnPositions);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+                alert('Error connecting to the server.');
+            }
+
+
+
+        })
+        
+    }
+
+
+    function buildTable(rows, columns,lightsOnPositions){
+        let $table = $("#gameTable");
+        $table.empty()
+
+        for(let i=0; i < rows; i++ ){
+            let $row = $('<tr></tr>');
+            for(let j=0; j < columns; j++){
+                let id = "row"+i+"col"+j;
+                let $cell = $("<td id='"+id+"'></td>")
+                $cell.on('click', () => { // Bind click event
+                    alert($cell.attr('id'));
+                });
+                $row.append($cell);
+            }
+            $table.append($row);
+
+        }
     }
   </script>
   
@@ -27,7 +78,7 @@
         </div>
         <div class = "card-body">
           <div class="text-center">
-            <form action="callSetup()">
+            <form onsubmit="callSetup(event)">
                 <label for="rows">Rows:</label>
                 <input type="text" id="rows" name="rows">
                 <label for="columns">Columns:</label>
@@ -40,6 +91,18 @@
           </div>
           
         </div>
+
+        
+        <div class = "card">
+            
+            <div class = "card-body">
+              <div class = "gameTableDiv">
+                <table id = "gameTable">
+  
+                </table>
+              </div>
+              
+            </div>
         
     </div>
   
