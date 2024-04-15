@@ -60,11 +60,11 @@
                 let id = "row"+i+"col"+j;
                 let $cell = $("<td id='"+id+"'></td>")
                 $cell.on('click', () => { // Bind click event
-                    alert($cell.attr('id'));
+                    handleGuess($cell.attr('id'));
                 });
 
                 if(idsFromPos.includes(id)){//if this light should be on based on the JSON from setup.php 
-                    $cell.addClass("lightOn")
+                    $cell.addClass("lightOn");
                 }
                 else{
                     $cell.addClass("lightOff");
@@ -85,6 +85,24 @@
         }
         return idArray;
 
+    }
+
+    function handleGuess(id){
+        console.log(id);
+        toggleClass(id);
+
+    }
+
+    function toggleClass(id){
+        let currCell = $("#"+id);
+        if(currCell.hasClass("lightOn")){
+            currCell.removeClass("lightOn");
+            currCell.addClass("lightOff");
+        }
+        else{
+            currCell.removeClass("lightOff");
+            currCell.addClass("lightOn");
+        }
     }
   </script>
   
