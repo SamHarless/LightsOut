@@ -88,12 +88,19 @@
     }
 
     function handleGuess(id){
-        console.log(id);
+        //console.log(id);
         toggleClass(id);
+
+        toggleAdjacent(id);
+
+        if(isCurrentBoardAWin()){
+            alert("You Won!!");
+        }
 
     }
 
     function toggleClass(id){
+        console.log(id);
         let currCell = $("#"+id);
         if(currCell.hasClass("lightOn")){
             currCell.removeClass("lightOn");
@@ -104,6 +111,41 @@
             currCell.addClass("lightOn");
         }
     }
+
+    function isCurrentBoardAWin(){
+        var allLightsOn = true;
+
+        $('td').each(function() {
+            //console.log($(this));
+            if($(this).hasClass('lightOff')){
+                allLightsOn = false;
+                return false;//leaves this "each" loop
+            }
+        });
+        return allLightsOn;
+    }
+
+    function toggleAdjacent(id){
+        let parsedRowCol = parseRowCol(id);
+
+        toggleClass("row"+(Number(parsedRowCol.row)+1)+"col"+parsedRowCol.col);
+        toggleClass("row"+(parsedRowCol.row-1)+"col"+parsedRowCol.col);
+        toggleClass("row"+(parsedRowCol.row)+"col"+(Number(parsedRowCol.col)+1));
+        toggleClass("row"+(parsedRowCol.row)+"col"+(parsedRowCol.col-1));
+
+    }
+    
+    function parseRowCol(id) {
+        const rowMatch = id.match(/row(\d+)/); 
+        const colMatch = id.match(/col(\d+)/); 
+
+        //console.log(rowMatch);
+        //console.log(colMatch);
+
+        return { row: rowMatch[1], col: colMatch[1] };
+
+    }
+
   </script>
   
   
