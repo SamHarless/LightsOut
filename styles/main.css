@@ -20,3 +20,11 @@ td {
     margin: 2px; /* space between cells */
    
 }
+
+.lightOff {
+    background-color: #49248A;
+}
+
+.lightOn {
+    background-color: #CA94F0;
+}

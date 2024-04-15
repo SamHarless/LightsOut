@@ -51,6 +51,9 @@
         let $table = $("#gameTable");
         $table.empty()
 
+        let idsFromPos = buildIDsFromPositions(lightsOnPositions);
+        console.log(idsFromPos);
+
         for(let i=0; i < rows; i++ ){
             let $row = $('<tr></tr>');
             for(let j=0; j < columns; j++){
@@ -59,11 +62,29 @@
                 $cell.on('click', () => { // Bind click event
                     alert($cell.attr('id'));
                 });
+
+                if(idsFromPos.includes(id)){//if this light should be on based on the JSON from setup.php 
+                    $cell.addClass("lightOn")
+                }
+                else{
+                    $cell.addClass("lightOff");
+                }
+
                 $row.append($cell);
             }
             $table.append($row);
 
         }
+    }
+
+    function buildIDsFromPositions(lightsOnPositions){
+        var idArray = [];
+        for(let i=0; i < lightsOnPositions.length; i++){
+            let stringBuilder = "row"+lightsOnPositions[i].row+"col"+lightsOnPositions[i].col;
+            idArray.push(stringBuilder);
+        }
+        return idArray;
+
     }
   </script>
   
