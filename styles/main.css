@@ -27,3 +27,11 @@ td {
 .lightOn {
     background-color: #CA94F0;
 }
+
+.doNotShow {
+    display: none;
+}
+
+#message {
+    background-color: green;
+}

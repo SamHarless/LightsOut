@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 
 $rows = isset($_GET['rows']) ? (int)$_GET['rows'] : 0;
-$columns = isset($_GET['columns']) ? (int)$_GET['columns'] : 0;
+$columns =  isset($_GET['rows']) ? (int)$_GET['rows'] : 0;
 
 
 $total_boxes = $rows * $columns;

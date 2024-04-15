@@ -17,9 +17,9 @@
 
         const formData = new FormData(event.target);
         const rows = formData.get('rows');
-        const columns = formData.get('columns');//gets data from form
+        //const columns = formData.get('columns');//gets data from form
 
-        const url ="setup.php?rows="+rows+"&columns="+columns;//setup.php url with query poarameters
+        const url ="setup.php?rows="+rows;//setup.php url with query poarameters
 
         //alert(url);
 
@@ -30,10 +30,10 @@
             type: "GET",
             dataType: 'json',
             success: function(response) {
-                console.log('Server response:', response);
+                //console.log('Server response:', response);
                 //alert('Data received from the server!');
                 console.log(response.lightsOnPositions);
-                buildTable(rows, columns, response.lightsOnPositions);
+                buildTable(rows, rows, response.lightsOnPositions);
             },
             error: function(xhr, status, error) {
                 console.error('Error: ' + error);
@@ -48,6 +48,8 @@
 
 
     function buildTable(rows, columns,lightsOnPositions){
+        turnOffVictoryMessage();
+
         let $table = $("#gameTable");
         $table.empty()
 
@@ -59,7 +61,7 @@
             for(let j=0; j < columns; j++){
                 let id = "row"+i+"col"+j;
                 let $cell = $("<td id='"+id+"'></td>")
-                $cell.on('click', () => { // Bind click event
+                $cell.on('click', () => { //click event
                     handleGuess($cell.attr('id'));
                 });
 
@@ -94,13 +96,16 @@
         toggleAdjacent(id);
 
         if(isCurrentBoardAWin()){
-            alert("You Won!!");
+            turnOfClicksOnWin();
+            turnOnVictoryMessage();
+            //alert("You Won!!");
+            
         }
 
     }
 
     function toggleClass(id){
-        console.log(id);
+        //console.log(id);
         let currCell = $("#"+id);
         if(currCell.hasClass("lightOn")){
             currCell.removeClass("lightOn");
@@ -113,16 +118,16 @@
     }
 
     function isCurrentBoardAWin(){
-        var allLightsOn = true;
+        var allLightsOff = true;
 
         $('td').each(function() {
             //console.log($(this));
-            if($(this).hasClass('lightOff')){
-                allLightsOn = false;
+            if($(this).hasClass('lightOn')){
+                allLightsOff = false;
                 return false;//leaves this "each" loop
             }
         });
-        return allLightsOn;
+        return allLightsOff;
     }
 
     function toggleAdjacent(id){
@@ -146,6 +151,30 @@
 
     }
 
+    function turnOfClicksOnWin(){
+        $('td').each(function() {
+            //console.log($(this));
+            $(this).off('click');
+        });
+    }
+
+    function turnOnVictoryMessage(){
+        let msg = $('#message');
+
+        if(msg.hasClass("doNotShow")){
+            msg.removeClass("doNotShow");
+        }
+    }
+
+    function turnOffVictoryMessage(){
+        let msg = $("#message");
+            
+        if(!msg.hasClass("doNotShow")){
+            msg.addClass("doNotShow");
+        }
+        
+    }
+
   </script>
   
   
@@ -160,10 +189,11 @@
         <div class = "card-body">
           <div class="text-center">
             <form onsubmit="callSetup(event)">
-                <label for="rows">Rows:</label>
+                <label for="rows">Table Size:</label>
                 <input type="text" id="rows" name="rows">
+                <!--
                 <label for="columns">Columns:</label>
-                <input type="text" id="columns" name="columns">
+                <input type="text" id="columns" name="columns"> -->
                 <br>
                 <input style="margin-top: 10px" type="submit" value="Start Game">
 
@@ -175,9 +205,14 @@
 
         
         <div class = "card">
+            <div id="message" class = "card-header text-center doNotShow">
+                You Won! Congratulations!
+            </div>
             
             <div class = "card-body">
               <div class = "gameTableDiv">
+                
+                <br>
                 <table id = "gameTable">
   
                 </table>
