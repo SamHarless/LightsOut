@@ -10,13 +10,17 @@ h1{
 .gameTableDiv {
     display: flex;
     justify-content: center;
+    
+    width: 100%;
 }
 td {
     
     width: 60px; /* size of cells */
     height: 60px; 
     border: 2px solid #000; 
-    margin: 2px; /* space between cells */
+    
+    
+    
    
 }
 
